@@ -114,12 +114,41 @@
     .modal-tools-label { font-size: 0.68rem; font-weight: 700; color: #666; letter-spacing: 0.08em; text-transform: uppercase; }
     .modal-tool-chip { font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 6px; background: rgba(255,255,255,0.08); color: #ccc; border: 1px solid rgba(255,255,255,0.12); }
 
+    /* WORKFLOW */
+    .workflow-section { max-width: 1280px; margin: 0 auto; padding: 0 48px 80px; }
+    .workflow-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0; position: relative; }
+    .workflow-steps::before {
+      content: ""; position: absolute; top: 28px; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #00c896, #00a878);
+      z-index: 0;
+    }
+    .workflow-step { position: relative; z-index: 1; padding: 0 12px 0 0; display: flex; flex-direction: column; align-items: flex-start; }
+    .step-dot {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #e6f7f2, #c6efe3);
+      border: 2px solid #00c896;
+      display: grid; place-items: center;
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+    }
+    .step-num { font-size: 0.65rem; font-weight: 800; color: #00a878; letter-spacing: 0.08em; margin-bottom: 6px; text-transform: uppercase; }
+    .step-title { font-size: 0.88rem; font-weight: 700; color: #111; margin-bottom: 6px; line-height: 1.3; }
+    .step-desc { font-size: 0.76rem; color: #777; line-height: 1.6; }
+    .step-tools { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+    .step-tool { font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 5px; background: #f4f4f2; color: #555; border: 1px solid #eaeae8; }
+
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; padding: 100px 24px 48px; gap: 36px; }
       .section { padding: 0 24px 60px; }
+      .workflow-section { padding: 0 24px 60px; }
       .divider { padding: 0 24px; }
       nav { padding: 0 24px; }
       .nav-links { display: none; }
+      .workflow-steps { grid-template-columns: 1fr 1fr; gap: 28px; }
+      .workflow-steps::before { display: none; }
+    }
+    @media (max-width: 520px) {
+      .workflow-steps { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -183,6 +212,57 @@
         <span class="skill-chip">Prompt Engineering</span>
         <span class="skill-chip">Brand Storytelling</span>
         <span class="skill-chip">SNS Content</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><hr /></div>
+
+  <section class="workflow-section">
+    <div class="section-header">
+      <span class="section-title">제작 워크플로우</span>
+      <span class="section-count">6 STEPS</span>
+    </div>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-dot">🎯</div>
+        <div class="step-num">Step 01</div>
+        <div class="step-title">기획 — 목적 & 방향 설정</div>
+        <div class="step-desc">프로젝트 목적과 메시지를 정의하고 톤, 타겟, 핵심 콘셉트를 확정합니다.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-dot">🔍</div>
+        <div class="step-num">Step 02</div>
+        <div class="step-title">레퍼런스 수집 & 컷 추출</div>
+        <div class="step-desc">방향에 맞는 레퍼런스 영상을 수집하고 참고할 씬을 잘라 이미지로 정리합니다.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-dot">🖼️</div>
+        <div class="step-num">Step 03</div>
+        <div class="step-title">키 이미지 제작</div>
+        <div class="step-desc">레퍼런스 기반으로 프로젝트 고유의 Key Visual을 생성합니다.</div>
+        <div class="step-tools"><span class="step-tool">Midjourney</span></div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-dot">🎨</div>
+        <div class="step-num">Step 04</div>
+        <div class="step-title">씬별 이미지 대량 생성</div>
+        <div class="step-desc">키 이미지 스타일을 기준으로 그리드 형태로 씬별 이미지를 대량 제작합니다.</div>
+        <div class="step-tools"><span class="step-tool">Nanobanana Pro</span></div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-dot">🎬</div>
+        <div class="step-num">Step 05</div>
+        <div class="step-title">영상 제작</div>
+        <div class="step-desc">생성된 이미지들을 기반으로 AI 툴을 활용해 영상으로 구성합니다.</div>
+        <div class="step-tools"><span class="step-tool">Kling</span><span class="step-tool">Hailuo</span></div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-dot">✂️</div>
+        <div class="step-num">Step 06</div>
+        <div class="step-title">컷 편집</div>
+        <div class="step-desc">전체 흐름에 맞게 컷 편집으로 최종 마무리합니다.</div>
+        <div class="step-tools"><span class="step-tool">CapCut</span></div>
       </div>
     </div>
   </section>
