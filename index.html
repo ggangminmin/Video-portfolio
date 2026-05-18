@@ -79,9 +79,10 @@
       box-shadow: 0 24px 60px rgba(0,0,0,0.22), 0 4px 14px rgba(0,0,0,0.1);
       cursor: pointer;
     }
-    .showreel-screen video {
-      width: 100%; height: 100%; object-fit: cover; display: block;
+    .showreel-screen video, .showreel-screen iframe {
+      width: 100%; height: 100%; object-fit: cover; display: block; border: 0;
     }
+    .showreel-click { position: absolute; inset: 0; z-index: 2; cursor: pointer; }
     .showreel-nav {
       position: absolute; top: 50%; transform: translateY(-50%);
       width: 44px; height: 44px; border-radius: 50%;
@@ -100,6 +101,7 @@
       padding: 40px 20px 18px;
       background: linear-gradient(to top, rgba(0,0,0,0.78), transparent);
       display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+      z-index: 3;
     }
     .showreel-now-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.6); text-transform: uppercase; }
     .showreel-now { font-size: 0.98rem; font-weight: 700; color: #fff; margin-top: 3px; line-height: 1.3; }
@@ -184,7 +186,7 @@
     .video-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 14px rgba(0,0,0,0.06); transition: transform 0.22s, box-shadow 0.22s; cursor: pointer; }
     .video-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.14); }
     .card-thumb { position: relative; aspect-ratio: 16/9; background: #111; overflow: hidden; }
-    .card-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .card-duration { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.68); color: #fff; font-size: 0.68rem; font-weight: 600; padding: 3px 8px; border-radius: 5px; }
     .card-preview-hint {
       position: absolute; top: 10px; left: 10px;
@@ -195,7 +197,7 @@
     }
     .video-card:hover .card-preview-hint { opacity: 1; }
     .card-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.18); backdrop-filter: blur(6px); border: 1.5px solid rgba(255,255,255,0.45); display: grid; place-items: center; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
-    .video-card:hover .card-play { opacity: 0; }
+    .video-card:hover .card-play { opacity: 1; }
     .card-body { padding: 18px 20px 18px; }
     .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
     .card-tag { font-size: 0.68rem; font-weight: 700; color: #888; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -216,7 +218,7 @@
     .modal-bg.open { display: flex; }
     .modal { width: min(900px, 94vw); background: #111; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
     .modal-video-wrap { aspect-ratio: 16/9; background: #000; position: relative; }
-    .modal-video-wrap video { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .modal-video-wrap video, .modal-video-wrap iframe { width: 100%; height: 100%; object-fit: contain; display: block; border: 0; }
     .modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.6); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; display: grid; place-items: center; z-index: 10; }
     .modal-close:hover { background: rgba(255,255,255,0.15); }
     .modal-body { padding: 22px 24px 24px; }
@@ -339,7 +341,8 @@
 
     <div class="showreel">
       <div class="showreel-screen" id="showreelScreen">
-        <video id="showreelVideo" muted playsinline preload="auto"></video>
+        <div id="showreelPlayer"></div>
+        <div class="showreel-click" id="showreelClick"></div>
         <button class="showreel-nav prev" id="reelPrev" aria-label="이전 영상">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
@@ -553,7 +556,7 @@
     <div class="modal" id="modal">
       <div class="modal-video-wrap">
         <button class="modal-close" onclick="closeModal()">×</button>
-        <video id="modalVideo" controls preload="metadata" playsinline></video>
+        <div id="modalPlayer"></div>
       </div>
       <div class="modal-body">
         <div class="modal-tags" id="modalTags"></div>
@@ -567,7 +570,7 @@
   <script>
     const videos = [
       {
-        src: "Ainspire 3기 졸업작품.mp4",
+        yt: "9NsxYY3FAto",
         title: "Ainspire 3기 졸업작품",
         tags: ["AI 교육", "졸업작품", "AI 영상"],
         tools: ["Higgsfield", "AI Studio Build", "Kling", "Grok", "Suno", "CapCut"],
@@ -576,7 +579,7 @@
         desc: "Ainspire 3기 과정의 졸업 프로젝트로 제작된 AI 활용 영상 작품입니다."
       },
       {
-        src: "수창티피에스 홍보영상 2차.mp4",
+        yt: "z6RLCZu4hy4",
         title: "수창티피에스 기업 홍보영상",
         tags: ["기업홍보", "AI 촬영/편집", "B2B"],
         tools: ["Kling", "Hailuo", "Midjourney", "CapCut"],
@@ -585,7 +588,7 @@
         desc: "수창티피에스의 브랜드 아이덴티티를 담은 기업 홍보영상입니다. 촬영 디렉팅부터 AI 기반 후반 편집까지 전 과정을 진행했습니다."
       },
       {
-        src: "이지네트웍스 홍보영상 4차.mp4",
+        yt: "rMVjcO-uW_0",
         title: "이지네트웍스 기업 홍보영상",
         tags: ["기업홍보", "AI 편집", "IT"],
         tools: ["Kling", "Hailuo", "Midjourney", "CapCut"],
@@ -594,7 +597,7 @@
         desc: "IT 솔루션 기업 이지네트웍스의 서비스와 기업 가치를 시각적으로 표현한 홍보영상입니다."
       },
       {
-        src: "퓨리얼 정수기와 함께하는 나만의 오아시스 @pureal_ko.mp4",
+        yt: "N0iFK6-JHpg",
         title: "퓨리얼 정수기 — 나만의 오아시스",
         tags: ["SNS 광고", "제품영상", "라이프스타일"],
         tools: ["Kling", "Hailuo", "Midjourney", "CapCut"],
@@ -603,7 +606,7 @@
         desc: "퓨리얼 정수기 브랜드의 SNS 콘텐츠 영상. 일상 속 청정함과 오아시스 감성을 담아낸 라이프스타일 제품 영상입니다."
       },
       {
-        src: "서초 미래도시.mp4",
+        yt: "BWzXQ2eYar8",
         title: "미래도시 서초 — 지금 이곳에서 시작됩니다",
         tags: ["도시 홍보", "AI 영상", "스토리텔링"],
         tools: ["Midjourney", "Nanobanana Pro", "Kling", "ElevenLabs", "CapCut"],
@@ -612,7 +615,7 @@
         desc: "기술과 사람, 자연이 공존하는 미래 도시를 주제로 한 경험형 도시 홍보영상. 아이의 시선에서 시작해 자연·일상·문화·교육으로 이어지며 '사람 중심의 미래 도시'를 그려냅니다."
       },
       {
-        src: "누군가가 지켜낸 오늘.mp4",
+        yt: "KFJyYg4lD70",
         title: "누군가가 지켜낸 오늘",
         tags: ["호국보훈", "AI 영상", "스토리텔링"],
         tools: ["GPT Image", "Kling", "Higgsfield", "Nano Banana", "CapCut"],
@@ -622,22 +625,34 @@
       }
     ];
 
-    function formatDuration(secs) {
-      if (!secs || isNaN(secs)) return '—';
-      const m = Math.floor(secs / 60);
-      const s = Math.floor(secs % 60).toString().padStart(2, '0');
-      return `${m}:${s}`;
-    }
+    /* ---------- YOUTUBE IFRAME API ---------- */
+    let reelPlayer = null, reelIdx = 0;
+
+    (function loadYTApi() {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    })();
+
+    window.onYouTubeIframeAPIReady = function () {
+      reelPlayer = new YT.Player('showreelPlayer', {
+        videoId: videos[reelIdx].yt,
+        playerVars: { autoplay: 1, mute: 1, controls: 0, rel: 0, modestbranding: 1, playsinline: 1, fs: 0, disablekb: 1 },
+        events: {
+          onReady: e => { e.target.mute(); e.target.playVideo(); },
+          onStateChange: e => {
+            if (e.data === YT.PlayerState.ENDED) loadReel((reelIdx + 1) % videos.length);
+          }
+        }
+      });
+    };
 
     /* ---------- SHOWREEL ---------- */
-    let reelIdx = 0;
-    const reelVideo = document.getElementById('showreelVideo');
-
     function renderDots() {
       const dots = document.getElementById('showreelDots');
       dots.innerHTML = videos.map((_, i) => `<button class="reel-dot" data-i="${i}" aria-label="작품 ${i + 1}"></button>`).join('');
       dots.querySelectorAll('.reel-dot').forEach(d => {
-        d.addEventListener('click', () => loadReel(parseInt(d.dataset.i)));
+        d.addEventListener('click', e => { e.stopPropagation(); loadReel(parseInt(d.dataset.i)); });
       });
     }
 
@@ -649,22 +664,15 @@
 
     function loadReel(i) {
       reelIdx = i;
-      reelVideo.src = videos[i].src;
-      reelVideo.currentTime = 0;
-      reelVideo.muted = true;
-      reelVideo.play().catch(() => {});
+      if (reelPlayer && reelPlayer.loadVideoById) {
+        reelPlayer.mute();
+        reelPlayer.loadVideoById(videos[i].yt);
+      }
       document.getElementById('showreelNow').textContent = videos[i].title;
       updateDots();
     }
 
-    reelVideo.addEventListener('ended', () => {
-      loadReel((reelIdx + 1) % videos.length);
-    });
-
-    document.getElementById('showreelScreen').addEventListener('click', e => {
-      if (e.target.closest('.reel-dot') || e.target.closest('.showreel-nav')) return;
-      openModal(reelIdx);
-    });
+    document.getElementById('showreelClick').addEventListener('click', () => openModal(reelIdx));
 
     document.getElementById('reelPrev').addEventListener('click', e => {
       e.stopPropagation();
@@ -684,12 +692,10 @@
         card.className = 'video-card';
         card.onclick = () => openModal(i);
 
-        const durationId = `dur-${i}`;
         card.innerHTML = `
           <div class="card-thumb">
-            <video src="${v.src}" muted preload="metadata" playsinline loop data-idx="${i}"></video>
-            <span class="card-preview-hint">▶ 미리보기</span>
-            <span class="card-duration" id="${durationId}">—</span>
+            <img src="https://img.youtube.com/vi/${v.yt}/hqdefault.jpg" alt="${v.title}" loading="lazy" />
+            <span class="card-preview-hint">▶ 영상 보기</span>
             <div class="card-play">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
             </div>
@@ -710,45 +716,26 @@
         `;
 
         grid.appendChild(card);
-
-        const vid = card.querySelector('video');
-        vid.addEventListener('loadedmetadata', () => {
-          vid.currentTime = 1.5;
-          document.getElementById(durationId).textContent = formatDuration(vid.duration);
-        });
-
-        // hover-to-preview
-        card.addEventListener('mouseenter', () => {
-          vid.muted = true;
-          vid.play().catch(() => {});
-        });
-        card.addEventListener('mouseleave', () => {
-          vid.pause();
-          vid.currentTime = 1.5;
-        });
       });
     }
 
     /* ---------- MODAL ---------- */
     function openModal(idx) {
       const v = videos[idx];
-      const modalVid = document.getElementById('modalVideo');
-      modalVid.src = v.src;
-      modalVid.currentTime = 0;
+      document.getElementById('modalPlayer').innerHTML =
+        `<iframe src="https://www.youtube.com/embed/${v.yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
       document.getElementById('modalTitle').textContent = v.title;
       document.getElementById('modalDesc').textContent = v.desc;
       document.getElementById('modalTags').innerHTML = v.tags.map(t => `<span class="tag accent">${t}</span>`).join('');
       document.getElementById('modalTools').innerHTML = `<span class="modal-tools-label">Tools</span>` + v.tools.map(t => `<span class="modal-tool-chip">${t}</span>`).join('');
       document.getElementById('modalBg').classList.add('open');
-      reelVideo.pause();
-      modalVid.play();
+      if (reelPlayer && reelPlayer.pauseVideo) reelPlayer.pauseVideo();
     }
 
     function closeModal() {
       document.getElementById('modalBg').classList.remove('open');
-      const v = document.getElementById('modalVideo');
-      v.pause(); v.src = '';
-      reelVideo.play().catch(() => {});
+      document.getElementById('modalPlayer').innerHTML = '';
+      if (reelPlayer && reelPlayer.playVideo) { reelPlayer.mute(); reelPlayer.playVideo(); }
     }
 
     function handleModalClick(e) {
@@ -764,7 +751,8 @@
 
     renderDots();
     renderGrid();
-    loadReel(0);
+    updateDots();
+    document.getElementById('showreelNow').textContent = videos[reelIdx].title;
 
     /* ---------- NAV SCROLL SPY ---------- */
     const navLinks = document.querySelectorAll('.nav-links a');
