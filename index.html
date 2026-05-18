@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI 비디오 다이렉팅 | Minseok's Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.5' fill='%23111827'/><g transform='translate(3.6 3.6) scale(0.7)' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5'/><rect x='2' y='6' width='14' height='12' rx='2'/></g></svg>" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.min.css" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -219,6 +220,7 @@
     .modal { width: min(900px, 94vw); background: #111; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
     .modal-video-wrap { aspect-ratio: 16/9; background: #000; position: relative; }
     .modal-video-wrap video, .modal-video-wrap iframe { width: 100%; height: 100%; object-fit: contain; display: block; border: 0; }
+    #showreelPlayer, #modalPlayer { position: absolute; inset: 0; width: 100%; height: 100%; }
     .modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.6); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; display: grid; place-items: center; z-index: 10; }
     .modal-close:hover { background: rgba(255,255,255,0.15); }
     .modal-body { padding: 22px 24px 24px; }
